@@ -1,8 +1,8 @@
-package kr.hhplus.be.server.common.exception.handler;
+package kr.hhplus.be.server.shared.exception.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.hhplus.be.server.common.dto.CommonResponse;
+import kr.hhplus.be.server.shared.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
@@ -25,7 +25,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
-import static kr.hhplus.be.server.common.constant.StatusCode.*;
+import static kr.hhplus.be.server.shared.constant.StatusCode.*;
 import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
@@ -43,7 +43,7 @@ public class ServletExceptionHandler {
                 .collect(Collectors.joining(", "));
         String msg = "Current Content-Type : %s, Supported Content-Types : %s".formatted(currentMediaType, supportedMediaTypes);
 
-        return new CommonResponse<>(NOT_SUPPORTED_MEDIA_TYPE.getCode(), msg, null);
+        return CommonResponse.error(NOT_SUPPORTED_MEDIA_TYPE, msg);
     }
 
     @ResponseStatus(code = NOT_ACCEPTABLE)
@@ -55,7 +55,7 @@ public class ServletExceptionHandler {
                 .collect(Collectors.joining(", "));
         String msg = "Current Accept-Type : %s, Supported Accept-Types : %s".formatted(currentMediaType, supportedMediaTypes);
 
-        return new CommonResponse<>(NOT_ACCEPTABLE_TYPE.getCode(), msg, null);
+        return CommonResponse.error(NOT_ACCEPTABLE_TYPE, msg);
     }
 
     @ResponseStatus(code = METHOD_NOT_ALLOWED)
@@ -71,7 +71,7 @@ public class ServletExceptionHandler {
 
         String msg = "Current Method : %s, Supported Methods : %s".formatted(currentMethod, supportedMethods);
 
-        return new CommonResponse<>(NOT_SUPPORTED_METHOD.getCode(), msg, null);
+        return CommonResponse.error(NOT_SUPPORTED_METHOD, msg);
     }
 
     @ResponseStatus(code = NOT_FOUND)
@@ -79,7 +79,7 @@ public class ServletExceptionHandler {
     public CommonResponse<String> noHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request, HttpServletResponse response) {
         String msg = "%s %s : Not Found".formatted(ex.getHttpMethod(), request.getRequestURI());
 
-        return new CommonResponse<>(NOT_FOUND_RESOURCE.getCode(), msg, null);
+        return CommonResponse.error(NOT_FOUND_RESOURCE, msg);
     }
 
     @ResponseStatus(code = NOT_FOUND)
@@ -87,7 +87,7 @@ public class ServletExceptionHandler {
     public CommonResponse<String> noResourceFoundException(NoResourceFoundException ex, HttpServletRequest request, HttpServletResponse response) {
         String msg = "%s '%s' : Not Found".formatted(ex.getHttpMethod(), request.getRequestURI());
 
-        return new CommonResponse<>(NOT_FOUND_RESOURCE.getCode(), msg, null);
+        return CommonResponse.error(NOT_FOUND_RESOURCE, msg);
     }
 
     @ResponseStatus(code = BAD_REQUEST)
@@ -95,7 +95,7 @@ public class ServletExceptionHandler {
     public CommonResponse<String> missingRequestHeaderException(MissingRequestHeaderException ex, HttpServletRequest request, HttpServletResponse response) {
         String msg = "Missing Http Header, Required header's Name : " + ex.getHeaderName();
 
-        return new CommonResponse<>(REQ_HEADER.getCode(), msg, null);
+        return CommonResponse.error(REQ_HEADER, msg);
     }
 
     @ResponseStatus(code = BAD_REQUEST)
@@ -103,7 +103,7 @@ public class ServletExceptionHandler {
     public CommonResponse<String> missingServletRequestParameterException(MissingServletRequestParameterException ex, HttpServletRequest request, HttpServletResponse response) {
         String msg = "Missing Required Parameter, Parameter's Name : " + ex.getParameterName();
 
-        return new CommonResponse<>(REQ_PARAM.getCode(), msg, null);
+        return CommonResponse.error(REQ_PARAM, msg);
     }
 
     @ResponseStatus(code = BAD_REQUEST)
@@ -114,7 +114,7 @@ public class ServletExceptionHandler {
         Object currentValue = ex.getValue();
         String msg = "Parameter's Type Mismatch Occurred. Parameter's type : %s, Parameter's name : %s, Current Value : %s".formatted(requiredParamType, paramName, currentValue);
 
-        return new CommonResponse<>(BAD_PARAM.getCode(), msg, null);
+        return CommonResponse.error(BAD_PARAM, msg);
     }
 
     @ResponseStatus(code = BAD_REQUEST)
@@ -133,15 +133,15 @@ public class ServletExceptionHandler {
 
                 msg = "Parameter's Type Mismatch Occurred. Parameter's Type : %s, Parameter's name : %s, Current Value : %s".formatted(fieldType, fieldName, currentValue);
             }
-            return new CommonResponse<>(BAD_PARAM.getCode(), msg, null);
+            return CommonResponse.error(BAD_PARAM, msg);
         }
-        return new CommonResponse<>(BAD_PARAM.getCode(), error.getDefaultMessage(), null);
+        return CommonResponse.error(BAD_PARAM, error.getDefaultMessage());
     }
 
     @ResponseStatus(code = BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public CommonResponse<String> HttpMessageNotReadableException(HttpMessageNotReadableException ex, HttpServletRequest request, HttpServletResponse response) {
-        return new CommonResponse<>(BAD_PARAM.getCode(), BAD_PARAM.getMsg(), null);
+        return CommonResponse.error(BAD_PARAM);
     }
 
     private String getFieldType(Object target, String fieldName) {

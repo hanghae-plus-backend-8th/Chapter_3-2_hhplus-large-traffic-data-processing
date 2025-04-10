@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.common.constant;
+package kr.hhplus.be.server.shared.constant;
 
 import lombok.Getter;
 
