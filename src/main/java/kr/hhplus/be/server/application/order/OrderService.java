@@ -11,8 +11,7 @@ import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderRepository;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentRepository;
-import kr.hhplus.be.server.domain.point.MemberPoint;
-import kr.hhplus.be.server.domain.point.PointRepository;
+import kr.hhplus.be.server.domain.point.*;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductRepository;
 import kr.hhplus.be.server.interfaces.api.order.OrderRequest;
@@ -33,6 +32,7 @@ import java.util.List;
 public class OrderService {
 
     private final PointRepository pointRepository;
+    private final PointHistoryRepository pointHistoryRepository;
     private final ProductRepository productRepository;
     private final MemberCouponRepository memberCouponRepository;
     private final OrderRepository orderRepository;
@@ -49,11 +49,9 @@ public class OrderService {
         // 사용자 쿠폰, 포인트, 상품 조회
         MemberCoupon memberCoupon = null;
         if (couponNumber != null) {
-            memberCoupon = memberCouponRepository.findByCouponNumber(couponNumber)
-                    .orElseThrow(() -> new NotFoundResourceException("유효하지 않은 쿠폰번호입니다."));
+            memberCoupon = memberCouponRepository.getByCouponNumber(couponNumber);
         }
-        MemberPoint memberPoint = pointRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundResourceException("유효하지 않은 사용자 식별자입니다."));
+        MemberPoint memberPoint = pointRepository.getById(memberId);
         List<Product> products = productRepository.findAllByIds(productIds);
 
         // 쿠폰, 상품 검증
@@ -71,13 +69,15 @@ public class OrderService {
         }
         Payment payment = Payment.processPayment(order, memberCoupon, memberPoint, LocalDateTime.now());
 
-        // 도메인 레이어 작업 끝난 이후, 영속화 작업 진행
+        // 도메인 레이어 작업 끝난 이후, 영속화 작업 진행 / 포인트 히스토리 저장해
         // --> (TO DO) 도메인 서비스로 잘게 분리해볼 것!
-        productRepository.updateQuantity(order.getOrderProducts());
         Order savedOrder = orderRepository.save(order);
         Payment savedPayment = paymentRepository.save(payment);
-        memberCouponRepository.update(memberCoupon);
-        pointRepository.update(memberPoint.getMemberId(), memberPoint.getPoint());
+        PointHistory pointHistory = PointHistory.create(memberId, TransactionType.USE, savedPayment.getPayPrice());
+        productRepository.updateQuantity(products);
+        memberCouponRepository.updateStatus(memberCoupon);
+        pointRepository.updatePoint(memberPoint);
+        pointHistoryRepository.save(pointHistory);
 
         return new OrderCaptureResult(savedPayment, savedOrder);
     }

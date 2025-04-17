@@ -19,4 +19,19 @@ public class ProductResult {
             this.quantity = product.getQuantity();
         }
     }
+
+    @Getter
+    public static class ProductPopularResult {
+        private long productId;
+        private String name;
+        private long price;
+        private int quantity;
+
+        public ProductPopularResult(Product product) {
+            this.productId = product.getId();
+            this.name = product.getName();
+            this.price = product.getPrice();
+            this.quantity = product.getQuantity();
+        }
+    }
 }

@@ -1,10 +1,11 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import java.util.Optional;
+import kr.hhplus.be.server.shared.dto.ListDto;
 
 public interface MemberCouponRepository {
 
     MemberCoupon save(MemberCoupon memberCoupon);
-    Optional<MemberCoupon> findByCouponNumber(String couponNumber);
-    void update(MemberCoupon memberCoupon);
+    MemberCoupon getByCouponNumber(String couponNumber);
+    void updateStatus(MemberCoupon memberCoupon);
+    ListDto<MemberCoupon> list(long memberId, int start, int limit);
 }

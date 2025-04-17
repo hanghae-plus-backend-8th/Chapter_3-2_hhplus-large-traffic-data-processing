@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.interfaces.api.order;
 
-import kr.hhplus.be.server.application.order.OrderCommand.OrderCaptureCommand;
 import kr.hhplus.be.server.application.order.OrderResult.OrderCaptureResult;
 import kr.hhplus.be.server.application.order.OrderService;
 import kr.hhplus.be.server.interfaces.api.order.OrderRequest.OrderCaptureRequest;
@@ -29,7 +28,7 @@ public class OrderController implements OrderControllerDocs {
         if (orderCaptureRequest.isNotValid()) {
             throw new IllegalArgumentException("상품 ID 목록과 수량 목록이 일치하지 않습니다.");
         }
-        OrderCaptureResult orderCaptureResult = orderService.capture(new OrderCaptureCommand(orderCaptureRequest));
+        OrderCaptureResult orderCaptureResult = orderService.capture(orderCaptureRequest.toCommand());
         OrderCaptureResponse orderCaptureResponse = new OrderCaptureResponse(orderCaptureResult);
 
         return CommonResponse.success(orderCaptureResponse);

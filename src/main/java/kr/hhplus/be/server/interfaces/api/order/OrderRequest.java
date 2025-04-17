@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import kr.hhplus.be.server.application.order.OrderCommand;
+import kr.hhplus.be.server.application.order.OrderCommand.OrderCaptureCommand;
 import lombok.Getter;
 
 import java.util.List;
@@ -47,6 +49,10 @@ public class OrderRequest {
 
         public boolean isNotValid() {
             return productIds.size() != quantities.size();
+        }
+
+        public OrderCaptureCommand toCommand() {
+            return new OrderCaptureCommand(memberId, couponNumber, productIds, quantities);
         }
     }
 }

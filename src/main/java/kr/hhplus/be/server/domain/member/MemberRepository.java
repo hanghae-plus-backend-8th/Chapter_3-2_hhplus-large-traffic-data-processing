@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.domain.member;
 
-import java.util.Optional;
-
 public interface MemberRepository {
 
-    Optional<Member> findById(Long memberId);
+    Member save(Member member);
+
+    Member getById(Long memberId);
 }

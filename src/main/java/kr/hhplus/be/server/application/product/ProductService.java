@@ -1,13 +1,17 @@
 package kr.hhplus.be.server.application.product;
 
 import kr.hhplus.be.server.application.product.ProductResult.ProductInfoResult;
+import kr.hhplus.be.server.application.product.ProductResult.ProductPopularResult;
+import kr.hhplus.be.server.domain.order.OrderStatisticsRepository;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductRepository;
-import kr.hhplus.be.server.shared.exception.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -15,12 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public ProductInfoResult info(long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundResourceException("조회되는 상품이 없습니다."));
+        Product product = productRepository.getById(productId);
 
         return new ProductInfoResult(product);
+    }
+
+    public List<ProductPopularResult> popular(int limit) {
+        return productRepository.findTopProducts(limit)
+                .stream()
+                .map(ProductPopularResult::new)
+                .toList();
     }
 }

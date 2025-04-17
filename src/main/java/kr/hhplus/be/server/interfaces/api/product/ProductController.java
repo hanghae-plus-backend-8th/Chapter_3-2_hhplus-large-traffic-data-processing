@@ -1,15 +1,18 @@
 package kr.hhplus.be.server.interfaces.api.product;
 
+import kr.hhplus.be.server.application.product.ProductResult;
 import kr.hhplus.be.server.application.product.ProductResult.ProductInfoResult;
+import kr.hhplus.be.server.application.product.ProductResult.ProductPopularResult;
 import kr.hhplus.be.server.application.product.ProductService;
+import kr.hhplus.be.server.interfaces.api.product.ProductResponse.ProductPopularResponse;
 import kr.hhplus.be.server.shared.dto.CommonResponse;
 import kr.hhplus.be.server.interfaces.api.product.ProductResponse.ProductInfoResponse;
+import kr.hhplus.be.server.shared.dto.ListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -27,5 +30,17 @@ public class ProductController implements ProductControllerDocs {
         ProductInfoResponse productInfoResponse = new ProductInfoResponse(productInfoResult);
 
         return CommonResponse.success(productInfoResponse);
+    }
+
+    @GetMapping(path = "popular")
+    public CommonResponse<List<ProductPopularResponse>> popular(
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        List<ProductPopularResponse> topProducts = productService.popular(limit)
+                .stream()
+                .map(ProductPopularResponse::new)
+                .toList();
+
+        return CommonResponse.success(topProducts);
     }
 }

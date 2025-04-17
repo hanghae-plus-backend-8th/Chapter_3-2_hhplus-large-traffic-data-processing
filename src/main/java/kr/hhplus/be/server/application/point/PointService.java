@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.application.point;
 
 import kr.hhplus.be.server.application.point.PointResult.PointChargeResult;
+import kr.hhplus.be.server.application.point.PointResult.PointInfoResult;
 import kr.hhplus.be.server.domain.point.*;
 import kr.hhplus.be.server.shared.exception.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,19 @@ public class PointService {
 
     @Transactional
     public PointChargeResult charge(long memberId, long amount) {
-        MemberPoint memberPoint = pointRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundResourceException("해당 식별자로 조회되는 유저가 없습니다."));
+        MemberPoint memberPoint = pointRepository.getById(memberId);
 
         memberPoint.charge(amount);
-        memberPoint = pointRepository.update(memberPoint.getMemberId(), memberPoint.getPoint());
+
+        pointRepository.updatePoint(memberPoint);
         pointHistoryRepository.save(PointHistory.create(memberId, TransactionType.CHARGE, amount));
 
         return new PointChargeResult(memberPoint);
+    }
+
+    public PointInfoResult info(long memberId) {
+        MemberPoint memberPoint = pointRepository.getById(memberId);
+
+        return new PointInfoResult(memberPoint);
     }
 }

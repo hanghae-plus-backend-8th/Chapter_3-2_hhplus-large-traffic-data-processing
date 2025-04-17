@@ -2,13 +2,18 @@ package kr.hhplus.be.server.interfaces.api.coupon;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.StringToClassMapItem;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.hhplus.be.server.interfaces.api.coupon.CouponRequest.CouponListRequest;
 import kr.hhplus.be.server.interfaces.api.coupon.CouponResponse.CouponDownloadResponse;
+import kr.hhplus.be.server.interfaces.api.coupon.CouponResponse.CouponListResponse;
 import kr.hhplus.be.server.shared.dto.CommonResponse;
+import kr.hhplus.be.server.shared.dto.ListDto;
+import org.springdoc.core.annotations.ParameterObject;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -39,5 +44,36 @@ public interface CouponControllerDocs {
     CommonResponse<CouponDownloadResponse> download(
             @Parameter(description = "쿠폰 식별자", example = "1") long couponId,
             @Parameter(description = "사용자 식별자", example = "2") long memberId
+    );
+
+    @Operation(
+            summary = "보유 쿠폰 목록 API",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "쿠폰 목록 조회 성공",
+                            content = @Content(
+                                    mediaType = APPLICATION_JSON_VALUE,
+                                    schemaProperties = {
+                                            @SchemaProperty(name = "code", schema = @Schema(type = "string", example = "SUCCESS", description = "코드")),
+                                            @SchemaProperty(
+                                                    name = "data",
+                                                    schema = @Schema(
+                                                        type = "object",
+                                                        properties = {
+                                                                @StringToClassMapItem(key = "list", value = CouponListResponse.class),
+                                                                @StringToClassMapItem(key = "totalCount", value = Integer.class)
+                                                        }
+                                                    )
+                                            )
+                                    }
+                            )
+                    )
+            }
+    )
+    @ApiResponse(responseCode = "400", description = "유효하지 않은 사용자 식별자", content = @Content)
+    @ApiResponse(responseCode = "500", description = "서버 에러 발생", content = @Content)
+    CommonResponse<ListDto<CouponListResponse>> list(
+            @ParameterObject CouponListRequest couponListRequest
     );
 }

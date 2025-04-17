@@ -6,6 +6,17 @@ import lombok.Getter;
 public class PointResult {
 
     @Getter
+    public static class PointInfoResult {
+        private long memberId;
+        private long point;
+
+        public PointInfoResult(MemberPoint memberPoint) {
+            this.memberId = memberPoint.getMemberId();
+            this.point = memberPoint.getPoint();
+        }
+    }
+
+    @Getter
     public static class PointChargeResult {
         private long memberId;
         private long point;

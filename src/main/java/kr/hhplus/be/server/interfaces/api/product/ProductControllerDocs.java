@@ -8,7 +8,10 @@ import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.interfaces.api.product.ProductResponse.ProductInfoResponse;
+import kr.hhplus.be.server.interfaces.api.product.ProductResponse.ProductPopularResponse;
 import kr.hhplus.be.server.shared.dto.CommonResponse;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -35,5 +38,27 @@ public interface ProductControllerDocs {
     @ApiResponse(responseCode = "500", description = "서버 에러 발생", content = @Content)
     CommonResponse<ProductInfoResponse> info(
             @Parameter(description = "상품 식별자", example = "1") long productId
+    );
+
+
+    @Operation(
+            summary = "인기 상품 조회 API",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "인기 상품 조회 성공",
+                            content = @Content(
+                                    mediaType = APPLICATION_JSON_VALUE,
+                                    schemaProperties = {
+                                            @SchemaProperty(name = "code", schema = @Schema(type = "string", example = "SUCCESS", description = "코드")),
+                                            @SchemaProperty(name = "data", schema = @Schema(implementation = ProductPopularResponse.class))
+                                    }
+                            )
+                    )
+            }
+    )
+    @ApiResponse(responseCode = "500", description = "서버 에러 발생", content = @Content)
+    CommonResponse<List<ProductPopularResponse>> popular(
+            @Parameter(description = "인기상품 리스트 개수", example = "1") int limit
     );
 }
