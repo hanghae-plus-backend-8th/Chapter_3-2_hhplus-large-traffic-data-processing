@@ -28,6 +28,6 @@ public class PointRepositoryImpl implements PointRepository {
         MemberEntity memberEntity = memberJpaRepository.findById(memberPoint.getMemberId())
                 .orElseThrow(() -> new NotFoundResourceException("유효하지 않은 사용자 식별자입니다."));
 
-        memberEntity.updatePoint(memberEntity.getPoint());
+        memberEntity.updatePoint(memberPoint.getPoint());
     }
 }

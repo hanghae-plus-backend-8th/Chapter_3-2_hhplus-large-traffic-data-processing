@@ -45,7 +45,7 @@ public class MemberEntity extends BaseTimeEntity {
     @Comment("휴대폰번호")
     private String phone;
 
-    @Column(name = "point", nullable = false, columnDefinition = "int unsigned")
+    @Column(name = "point", nullable = false)
     @Comment("포인트")
     private Long point = 0L;
 

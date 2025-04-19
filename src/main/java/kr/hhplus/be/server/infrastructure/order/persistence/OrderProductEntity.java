@@ -26,7 +26,7 @@ public class OrderProductEntity {
     private Long orderProductId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @Comment("주문 PK")
     private OrderEntity order;
 

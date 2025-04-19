@@ -27,7 +27,7 @@ public class PointHistoryEntity {
     private Long pointHistoryId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @Comment("회원 PK")
     private MemberEntity member;
 

@@ -59,6 +59,7 @@ public class Order {
         }
         this.totalPrice += product.getPrice() * amount;
         this.orderProducts.add(OrderProduct.of(product.getId(), product.getPrice(), amount));
+        product.decreaseStock(amount);
     }
 
     public void complete() {

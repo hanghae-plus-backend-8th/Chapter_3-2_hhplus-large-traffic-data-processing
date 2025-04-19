@@ -27,12 +27,12 @@ public class MemberCouponEntity extends BaseTimeEntity {
     private Long memberCouponId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "coupon_id", nullable = false)
+    @JoinColumn(name = "coupon_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @Comment("쿠폰 PK")
     private CouponEntity coupon;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @Comment("회원 PK")
     private MemberEntity member;
 

@@ -76,8 +76,10 @@ public class OrderService {
             pointHistoryRepository.save(pointHistory);
             pointRepository.updatePoint(memberPoint);
         }
+        if (couponNumber != null) {
+            memberCouponRepository.updateStatus(memberCoupon);
+        }
         productRepository.updateQuantity(products);
-        memberCouponRepository.updateStatus(memberCoupon);
 
         return new OrderCaptureResult(savedPayment, savedOrder);
     }
