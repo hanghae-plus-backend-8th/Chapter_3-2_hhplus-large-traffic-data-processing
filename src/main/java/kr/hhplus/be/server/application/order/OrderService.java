@@ -1,10 +1,7 @@
 package kr.hhplus.be.server.application.order;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import kr.hhplus.be.server.application.order.OrderCommand.OrderCaptureCommand;
 import kr.hhplus.be.server.application.order.OrderResult.OrderCaptureResult;
-import kr.hhplus.be.server.domain.coupon.CouponRepository;
 import kr.hhplus.be.server.domain.coupon.MemberCoupon;
 import kr.hhplus.be.server.domain.coupon.MemberCouponRepository;
 import kr.hhplus.be.server.domain.order.Order;
@@ -14,9 +11,6 @@ import kr.hhplus.be.server.domain.payment.PaymentRepository;
 import kr.hhplus.be.server.domain.point.*;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductRepository;
-import kr.hhplus.be.server.interfaces.api.order.OrderRequest;
-import kr.hhplus.be.server.interfaces.api.order.OrderRequest.OrderCaptureRequest;
-import kr.hhplus.be.server.shared.exception.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -62,22 +56,28 @@ public class OrderService {
             throw new IllegalArgumentException("일부 상품을 찾을 수 없습니다. 다시 확인해 주세요.");
         }
 
-        // 주문 및 결제 처리
+        // 주문 처리
         Order order = Order.create(memberId);
         for (int i=0; i<products.size(); i++) {
             order.addOrderProduct(products.get(i), quantities.get(i));
         }
-        Payment payment = Payment.processPayment(order, memberCoupon, memberPoint, LocalDateTime.now());
-
-        // 도메인 레이어 작업 끝난 이후, 영속화 작업 진행 / 포인트 히스토리 저장해
-        // --> (TO DO) 도메인 서비스로 잘게 분리해볼 것!
         Order savedOrder = orderRepository.save(order);
+
+        // 결제 처리
+        Payment payment = Payment.processPayment(savedOrder, memberCoupon, memberPoint, LocalDateTime.now());
+
+        // 도메인 레이어 작업 끝난 이후, 영속화 작업 진행
+        // --> (TO DO) 도메인 서비스로 잘게 분리해볼 것!!!!! (야근 너무 많아요 +_+)
         Payment savedPayment = paymentRepository.save(payment);
-        PointHistory pointHistory = PointHistory.create(memberId, TransactionType.USE, savedPayment.getPayPrice());
+
+        // 실 결제금액이 0원이 아닌 경우에만 포인트 수정 및 히스토리 저장
+        if (savedPayment.getPayPrice() != 0L) {
+            PointHistory pointHistory = PointHistory.create(memberId, TransactionType.USE, savedPayment.getPayPrice());
+            pointHistoryRepository.save(pointHistory);
+            pointRepository.updatePoint(memberPoint);
+        }
         productRepository.updateQuantity(products);
         memberCouponRepository.updateStatus(memberCoupon);
-        pointRepository.updatePoint(memberPoint);
-        pointHistoryRepository.save(pointHistory);
 
         return new OrderCaptureResult(savedPayment, savedOrder);
     }

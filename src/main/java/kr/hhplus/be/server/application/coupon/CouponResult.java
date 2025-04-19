@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.coupon;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.domain.coupon.CouponType;
 import kr.hhplus.be.server.domain.coupon.MemberCoupon;
 import lombok.Getter;

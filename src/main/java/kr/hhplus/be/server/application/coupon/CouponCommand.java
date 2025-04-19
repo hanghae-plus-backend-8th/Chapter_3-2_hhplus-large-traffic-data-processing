@@ -1,10 +1,12 @@
 package kr.hhplus.be.server.application.coupon;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 public class CouponCommand {
 
     @Getter
+    @EqualsAndHashCode
     public static class CouponListCommand {
         private long memberId;
         private int start;

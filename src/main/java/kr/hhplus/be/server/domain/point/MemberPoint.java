@@ -2,9 +2,11 @@ package kr.hhplus.be.server.domain.point;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberPoint {
 
@@ -29,7 +31,7 @@ public class MemberPoint {
     }
 
     public void use(long amount) {
-        if (amount <= 0) {
+        if (amount < 0) {
             throw new IllegalArgumentException("사용할 포인트 금액이 유효하지 않습니다.");
         }
         if (point - amount < 0) {
