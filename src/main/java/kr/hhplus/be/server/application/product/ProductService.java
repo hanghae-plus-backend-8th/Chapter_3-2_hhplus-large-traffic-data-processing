@@ -2,7 +2,6 @@ package kr.hhplus.be.server.application.product;
 
 import kr.hhplus.be.server.application.product.ProductResult.ProductInfoResult;
 import kr.hhplus.be.server.application.product.ProductResult.ProductPopularResult;
-import kr.hhplus.be.server.domain.order.OrderStatisticsRepository;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j

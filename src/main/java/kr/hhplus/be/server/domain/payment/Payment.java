@@ -38,10 +38,10 @@ public class Payment {
                 : 0L;
         long payPrice = totalPrice - discountPrice;
 
-        if (payPrice > totalPrice) {
-            throw new IllegalArgumentException("실 결제금액이 총 결제금액을 초과할 수 없습니다.");
+        // 할인으로 실 결제금액이 0원이 아닌 경우에만 포인트 사용!
+        if (payPrice > 0L) {
+            memberPoint.use(payPrice);
         }
-        memberPoint.use(payPrice);
         order.complete();
 
         return new Payment(null, order, memberCoupon, totalPrice, discountPrice, payPrice, COMPLETED);
@@ -58,9 +58,6 @@ public class Payment {
     ) {
         if (id <= 0) {
             throw new IllegalArgumentException("결제 식별자가 유효하지 않습니다.");
-        }
-        if (payPrice > totalPrice) {
-            throw new IllegalArgumentException("실 결제금액이 총 결제금액을 초과할 수 없습니다.");
         }
         return new Payment(id, order, memberCoupon, totalPrice, discountPrice, payPrice, status);
     }

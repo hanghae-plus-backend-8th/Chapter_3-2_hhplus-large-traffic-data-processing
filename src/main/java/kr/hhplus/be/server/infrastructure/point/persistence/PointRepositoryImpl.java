@@ -24,10 +24,10 @@ public class PointRepositoryImpl implements PointRepository {
     }
 
     @Override
-    public void updatePoint(MemberPoint memberPoint) {
-        MemberEntity memberEntity = memberJpaRepository.findById(memberPoint.getMemberId())
+    public void updatePoint(long memberId, long point) {
+        MemberEntity memberEntity = memberJpaRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundResourceException("유효하지 않은 사용자 식별자입니다."));
 
-        memberEntity.updatePoint(memberPoint.getPoint());
+        memberEntity.updatePoint(point);
     }
 }

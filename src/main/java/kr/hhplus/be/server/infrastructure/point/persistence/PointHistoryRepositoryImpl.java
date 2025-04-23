@@ -4,6 +4,7 @@ import kr.hhplus.be.server.domain.point.PointHistory;
 import kr.hhplus.be.server.domain.point.PointHistoryRepository;
 import kr.hhplus.be.server.infrastructure.member.persistence.MemberEntity;
 import kr.hhplus.be.server.infrastructure.member.persistence.MemberJpaRepository;
+import kr.hhplus.be.server.shared.exception.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,7 @@ public class PointHistoryRepositoryImpl implements PointHistoryRepository {
     @Override
     public PointHistory save(PointHistory pointHistory) {
         MemberEntity memberEntity = memberJpaRepository.findById(pointHistory.getMemberId())
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundResourceException("유효하지 않은 사용자 식별자입니다."));
         PointHistoryEntity pointHistoryEntity = PointHistoryEntity.builder()
                 .member(memberEntity)
                 .type(pointHistory.getType())

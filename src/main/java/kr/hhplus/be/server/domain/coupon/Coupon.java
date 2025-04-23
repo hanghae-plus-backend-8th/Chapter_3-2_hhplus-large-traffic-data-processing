@@ -8,7 +8,6 @@ import java.util.UUID;
 import static kr.hhplus.be.server.domain.coupon.CouponType.PERCENT;
 
 @Getter
-@EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Coupon {
 

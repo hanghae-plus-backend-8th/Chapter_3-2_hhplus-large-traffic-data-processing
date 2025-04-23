@@ -36,21 +36,19 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public void updateQuantity(long productId, int quantity) {
+        ProductEntity productEntity = productJpaRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundResourceException("조회되는 상품이 없습니다."));
+
+        productEntity.updateQuantity(quantity);
+    }
+
+    @Override
     public List<Product> findAllByIds(List<Long> productIds) {
         return productJpaRepository.findAllById(productIds)
                 .stream()
                 .map(ProductEntity::toDomain)
                 .toList();
-    }
-
-    @Override
-    public void updateQuantity(List<Product> products) {
-        for (Product product : products) {
-            ProductEntity productEntity = productJpaRepository.findById(product.getId())
-                    .orElseThrow();
-
-            productEntity.updateQuantity(product.getQuantity());
-        }
     }
 
     @Override

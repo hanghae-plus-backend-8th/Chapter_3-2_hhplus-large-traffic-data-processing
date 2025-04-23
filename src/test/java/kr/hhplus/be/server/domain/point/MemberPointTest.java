@@ -32,14 +32,14 @@ class MemberPointTest {
         assertThat(memberPoint.getPoint()).isEqualTo(3000L);
     }
 
-    @DisplayName("사용할 포인트는 0원 미만일 수 없다.")
+    @DisplayName("사용할 포인트는 0원 이하일 수 없다.")
     @Test
     void useInvalidPoint() {
         // given
         MemberPoint memberPoint = MemberPoint.of(1L, 2000L);
 
         // when, then
-        assertThatThrownBy(() -> memberPoint.use(-1L))
+        assertThatThrownBy(() -> memberPoint.use(0L))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

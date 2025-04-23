@@ -2,6 +2,7 @@ package kr.hhplus.be.server.infrastructure.coupon.persistence;
 
 import kr.hhplus.be.server.domain.coupon.MemberCoupon;
 import kr.hhplus.be.server.domain.coupon.MemberCouponRepository;
+import kr.hhplus.be.server.domain.coupon.MemberCouponStatus;
 import kr.hhplus.be.server.infrastructure.member.persistence.MemberEntity;
 import kr.hhplus.be.server.infrastructure.member.persistence.MemberJpaRepository;
 import kr.hhplus.be.server.shared.dto.ListDto;
@@ -43,11 +44,11 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     }
 
     @Override
-    public void updateStatus(MemberCoupon memberCoupon) {
-        MemberCouponEntity memberCouponEntity = memberCouponJpaRepository.findById(memberCoupon.getId())
+    public void updateStatus(long memberCouponId, MemberCouponStatus status) {
+        MemberCouponEntity memberCouponEntity = memberCouponJpaRepository.findById(memberCouponId)
                 .orElseThrow(() -> new NotFoundResourceException("유효하지 않은 쿠폰번호 식별자입니다."));
 
-        memberCouponEntity.updateStatus(memberCoupon.getStatus());
+        memberCouponEntity.updateStatus(status);
     }
 
     @Override

@@ -8,8 +8,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProductTest {
 
-    // 상품 수량이 음수인 경우 + 상품 아이디가 음수인 경우는 상식적으로 맞지 않기 때문에 테스트를 작성하지 않았습니다.
-    // 이러한 부분도 테스트해야 하는지 궁금합니다.
     @DisplayName("무료 상품은 등록할 수 없다.")
     @Test
     void registerFreeProduct() {

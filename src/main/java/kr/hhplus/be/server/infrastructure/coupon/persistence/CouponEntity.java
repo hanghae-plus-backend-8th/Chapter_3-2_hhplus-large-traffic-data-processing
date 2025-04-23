@@ -70,7 +70,7 @@ public class CouponEntity extends BaseTimeEntity {
         return Coupon.of(couponId, name, type, discountValue, initialQuantity, remainingQuantity, startDate, endDate);
     }
 
-    public void updateRemainingQuantity(Integer remainingQuantity) {
+    public void updateQuantity(Integer remainingQuantity) {
         this.remainingQuantity = remainingQuantity;
     }
 }

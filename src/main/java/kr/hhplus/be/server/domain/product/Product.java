@@ -37,7 +37,6 @@ public class Product {
         return new Product(id, name, price, quantity);
     }
 
-    // increase(), decrease() 에서 검사하므로 해당 메소드로 별도의 테스트는 작성하지 않았습니다.
     public boolean isNotSufficient(int amount) {
         return quantity < amount;
     }

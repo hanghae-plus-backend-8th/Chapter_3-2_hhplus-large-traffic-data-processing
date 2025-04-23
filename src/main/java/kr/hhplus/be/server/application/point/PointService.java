@@ -24,7 +24,7 @@ public class PointService {
 
         memberPoint.charge(amount);
 
-        pointRepository.updatePoint(memberPoint);
+        pointRepository.updatePoint(memberPoint.getMemberId(), memberPoint.getPoint());
         pointHistoryRepository.save(PointHistory.create(memberId, TransactionType.CHARGE, amount));
 
         return new PointChargeResult(memberPoint);

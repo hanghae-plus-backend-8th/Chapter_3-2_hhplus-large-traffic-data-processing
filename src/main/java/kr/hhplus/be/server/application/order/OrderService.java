@@ -59,7 +59,13 @@ public class OrderService {
         // 주문 처리
         Order order = Order.create(memberId);
         for (int i=0; i<products.size(); i++) {
-            order.addOrderProduct(products.get(i), quantities.get(i));
+            long productId = productIds.get(i);
+            Product product = products.stream()
+                    .filter(productInfo -> productInfo.getId().equals(productId))
+                    .findFirst()
+                    .orElseThrow();
+
+            order.addOrderProduct(product, quantities.get(i));
         }
         Order savedOrder = orderRepository.save(order);
 
@@ -67,20 +73,22 @@ public class OrderService {
         Payment payment = Payment.processPayment(savedOrder, memberCoupon, memberPoint, LocalDateTime.now());
 
         // 도메인 레이어 작업 끝난 이후, 영속화 작업 진행
-        // --> (TO DO) 도메인 서비스로 잘게 분리해볼 것!!!!! (야근 너무 많아요 +_+)
+        // --> (TO DO) 도메인 서비스로 잘게 분리해볼 것!!!!!!!!!!!!!!!
+        // --> e.g. 주문 매니저 (쿠폰, 상품 검증 로직), 결제 매니저 (재고 차감 및 결제 정보 생성 등)
         Payment savedPayment = paymentRepository.save(payment);
 
         // 실 결제금액이 0원이 아닌 경우에만 포인트 수정 및 히스토리 저장
         if (savedPayment.getPayPrice() != 0L) {
             PointHistory pointHistory = PointHistory.create(memberId, TransactionType.USE, savedPayment.getPayPrice());
             pointHistoryRepository.save(pointHistory);
-            pointRepository.updatePoint(memberPoint);
+            pointRepository.updatePoint(memberPoint.getMemberId(), memberPoint.getPoint());
         }
-        if (couponNumber != null) {
-            memberCouponRepository.updateStatus(memberCoupon);
+        if (memberCoupon != null) {
+            memberCouponRepository.updateStatus(memberCoupon.getId(), memberCoupon.getStatus());
         }
-        productRepository.updateQuantity(products);
-
+        for (Product product : products) {
+            productRepository.updateQuantity(product.getId(), product.getQuantity());
+        }
         return new OrderCaptureResult(savedPayment, savedOrder);
     }
 }

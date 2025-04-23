@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -35,7 +34,7 @@ public class CouponService {
 
         MemberCoupon memberCoupon = coupon.giveCoupon(member.getMemberId(), LocalDateTime.now());
         memberCouponRepository.save(memberCoupon);
-        couponRepository.updateRemainingQuantity(coupon);
+        couponRepository.updateQuantity(coupon.getId(), coupon.getRemainingQuantity());
 
         return new CouponDownloadResult(memberCoupon);
     }

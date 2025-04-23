@@ -30,6 +30,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
                     .orElseThrow();
         }
         PaymentEntity paymentEntity = PaymentEntity.builder()
+                .paymentId(payment.getId())
                 .order(orderEntity)
                 .memberCoupon(memberCoupon)
                 .totalPrice(payment.getTotalPrice())

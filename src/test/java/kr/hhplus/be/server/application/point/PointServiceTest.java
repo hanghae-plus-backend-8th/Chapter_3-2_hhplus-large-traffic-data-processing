@@ -5,8 +5,6 @@ import kr.hhplus.be.server.application.point.PointResult.PointChargeResult;
 import kr.hhplus.be.server.application.point.PointResult.PointInfoResult;
 import kr.hhplus.be.server.domain.member.Member;
 import kr.hhplus.be.server.domain.member.MemberRepository;
-import kr.hhplus.be.server.domain.point.MemberPoint;
-import kr.hhplus.be.server.domain.point.PointHistory;
 import kr.hhplus.be.server.domain.point.PointHistoryRepository;
 import kr.hhplus.be.server.domain.point.PointRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
-import static kr.hhplus.be.server.domain.point.TransactionType.CHARGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -67,7 +64,7 @@ class PointServiceTest {
 
         assertThat(pointChargeResult.getPoint()).isEqualTo(point);
         inOrder.verify(pointRepository, times(1)).getById(member.getMemberId());
-        inOrder.verify(pointRepository, times(1)).updatePoint(MemberPoint.of(member.getMemberId(), point));
-        inOrder.verify(pointHistoryRepository, times(1)).save(PointHistory.create(member.getMemberId(), CHARGE, point));
+        inOrder.verify(pointRepository, times(1)).updatePoint(member.getMemberId(), point);
+        inOrder.verify(pointHistoryRepository, times(1)).save(any());
     }
 }

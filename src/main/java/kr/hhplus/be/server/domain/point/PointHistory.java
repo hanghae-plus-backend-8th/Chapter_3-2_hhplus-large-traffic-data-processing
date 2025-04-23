@@ -5,7 +5,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PointHistory {
 
@@ -15,7 +14,6 @@ public class PointHistory {
     private long amount;
     private LocalDateTime createdAt;
 
-    // PointHistory 도메인 객체는 별도의 비즈니스 로직을 갖지 않고 있고 조회용 모델이므로 테스트를 작성하지 않았습니다.
     public static PointHistory create(
             long memberId,
             @NonNull TransactionType type,
