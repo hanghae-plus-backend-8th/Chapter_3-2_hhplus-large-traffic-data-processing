@@ -48,11 +48,11 @@ public class CouponEntity extends BaseTimeEntity {
 
     @Column(name = "start_date", nullable = false)
     @Comment("유효기간 시작일")
-    private LocalDateTime startDate;
+    private LocalDateTime startDateTime;
 
     @Column(name = "end_date", nullable = false)
     @Comment("유효기간 종료일")
-    private LocalDateTime endDate;
+    private LocalDateTime endDateTime;
 
     @Builder
     private CouponEntity(Long couponId, String name, CouponType type, Integer discountValue, Integer initialQuantity, Integer remainingQuantity, LocalDateTime startDate, LocalDateTime endDate) {
@@ -62,15 +62,21 @@ public class CouponEntity extends BaseTimeEntity {
         this.discountValue = discountValue;
         this.initialQuantity = initialQuantity;
         this.remainingQuantity = remainingQuantity;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDateTime = startDate;
+        this.endDateTime = endDate;
     }
 
     public Coupon toDomain() {
-        return Coupon.of(couponId, name, type, discountValue, initialQuantity, remainingQuantity, startDate, endDate);
+        return Coupon.of(couponId, name, type, discountValue, initialQuantity, remainingQuantity, startDateTime, endDateTime);
     }
 
-    public void updateQuantity(Integer remainingQuantity) {
-        this.remainingQuantity = remainingQuantity;
+    public void update(Coupon coupon) {
+        this.name = coupon.getName();
+        this.type = coupon.getType();
+        this.discountValue = coupon.getDiscountValue();
+        this.initialQuantity = coupon.getInitialQuantity();
+        this.remainingQuantity = coupon.getRemainingQuantity();
+        this.startDateTime = coupon.getStartDateTime();
+        this.endDateTime = coupon.getEndDateTime();
     }
 }

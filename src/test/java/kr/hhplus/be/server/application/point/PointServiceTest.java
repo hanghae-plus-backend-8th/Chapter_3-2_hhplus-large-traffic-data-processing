@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.concurrent.CountDownLatch;
@@ -69,7 +68,7 @@ class PointServiceTest {
 
         assertThat(pointChargeResult.getPoint()).isEqualTo(point);
         inOrder.verify(pointRepository, times(1)).getByIdLocking(member.getMemberId());
-        inOrder.verify(pointRepository, times(1)).updatePoint(member.getMemberId(), point);
+        inOrder.verify(pointRepository, times(1)).update(any());
         inOrder.verify(pointHistoryRepository, times(1)).save(any());
     }
 

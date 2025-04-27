@@ -110,7 +110,7 @@ class OrderServiceTest {
         inOrder.verify(productRepository, times(1)).findAllByIdsLocking(List.of(product.getId()));
         inOrder.verify(orderRepository, times(1)).save(any());
         inOrder.verify(paymentRepository, times(1)).save(any());
-        inOrder.verify(memberCouponRepository, times(1)).updateStatus(anyLong(), any());
+        inOrder.verify(memberCouponRepository, times(1)).update(any());
     }
 
     @DisplayName("동시에 여러 명의 사용자가 상품을 주문하고 결제할 수 있다.")

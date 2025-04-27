@@ -4,7 +4,6 @@ import jakarta.persistence.OptimisticLockException;
 import kr.hhplus.be.server.application.point.PointResult.PointChargeResult;
 import kr.hhplus.be.server.application.point.PointResult.PointInfoResult;
 import kr.hhplus.be.server.domain.point.*;
-import kr.hhplus.be.server.shared.exception.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
@@ -28,7 +27,7 @@ public class PointService {
 
         memberPoint.charge(amount);
 
-        pointRepository.updatePoint(memberPoint.getMemberId(), memberPoint.getPoint());
+        pointRepository.update(memberPoint);
         pointHistoryRepository.save(PointHistory.create(memberId, TransactionType.CHARGE, amount));
 
         return new PointChargeResult(memberPoint);

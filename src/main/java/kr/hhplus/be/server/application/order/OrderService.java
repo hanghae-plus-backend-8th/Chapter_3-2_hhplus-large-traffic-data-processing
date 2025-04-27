@@ -81,13 +81,13 @@ public class OrderService {
         if (savedPayment.getPayPrice() != 0L) {
             PointHistory pointHistory = PointHistory.create(memberId, TransactionType.USE, savedPayment.getPayPrice());
             pointHistoryRepository.save(pointHistory);
-            pointRepository.updatePoint(memberPoint.getMemberId(), memberPoint.getPoint());
+            pointRepository.update(memberPoint);
         }
         if (memberCoupon != null) {
-            memberCouponRepository.updateStatus(memberCoupon.getId(), memberCoupon.getStatus());
+            memberCouponRepository.update(memberCoupon);
         }
         for (Product product : products) {
-            productRepository.updateQuantity(product.getId(), product.getQuantity());
+            productRepository.update(product);
         }
         return new OrderCaptureResult(savedPayment, savedOrder);
     }

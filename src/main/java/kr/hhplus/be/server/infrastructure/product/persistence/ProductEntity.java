@@ -46,7 +46,9 @@ public class ProductEntity extends BaseTimeEntity {
         return Product.of(productId, name, price, quantity);
     }
 
-    public void updateQuantity(int quantity) {
-        this.quantity = quantity;
+    public void update(Product product) {
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.quantity = product.getQuantity();
     }
 }

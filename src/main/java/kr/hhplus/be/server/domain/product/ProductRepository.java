@@ -6,7 +6,7 @@ public interface ProductRepository {
 
     Product save(Product product);
     Product getById(Long productId);
-    void updateQuantity(long productId, int quantity);
+    void update(Product product);
     List<Product> findAllByIds(List<Long> productIds);
     List<Product> findAllByIdsLocking(List<Long> productIds);
     List<Product> findTopProducts(int limit);

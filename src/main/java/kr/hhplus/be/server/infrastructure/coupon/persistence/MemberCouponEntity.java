@@ -61,7 +61,8 @@ public class MemberCouponEntity extends BaseTimeEntity {
         return MemberCoupon.of(memberCouponId, couponDomain, couponNumber, memberDomain.getMemberId(), status);
     }
 
-    public void updateStatus(MemberCouponStatus status) {
-        this.status = status;
+    public void update(MemberCoupon memberCoupon) {
+        this.couponNumber = memberCoupon.getCouponNumber();
+        this.status = memberCoupon.getStatus();
     }
 }

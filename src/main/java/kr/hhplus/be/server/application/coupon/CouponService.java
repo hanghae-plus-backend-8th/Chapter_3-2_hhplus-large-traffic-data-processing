@@ -34,7 +34,7 @@ public class CouponService {
 
         MemberCoupon memberCoupon = coupon.giveCoupon(member.getMemberId(), LocalDateTime.now());
         memberCouponRepository.save(memberCoupon);
-        couponRepository.updateQuantity(coupon.getId(), coupon.getRemainingQuantity());
+        couponRepository.update(coupon);
 
         return new CouponDownloadResult(memberCoupon);
     }

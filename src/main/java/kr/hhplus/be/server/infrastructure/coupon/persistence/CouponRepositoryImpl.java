@@ -45,10 +45,10 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public void updateQuantity(long couponId, int remainingQuantity) {
-        CouponEntity couponEntity = couponJpaRepository.findById(couponId)
+    public void update(Coupon coupon) {
+        CouponEntity couponEntity = couponJpaRepository.findById(coupon.getId())
                 .orElseThrow(() -> new NotFoundResourceException("유효하지 않은 쿠폰 식별자입니다."));
 
-        couponEntity.updateQuantity(remainingQuantity);
+        couponEntity.update(coupon);
     }
 }

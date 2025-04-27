@@ -4,5 +4,5 @@ public interface PointRepository {
 
     MemberPoint getById(long memberId);
     MemberPoint getByIdLocking(long memberId);
-    void updatePoint(long memberId, long point);
+    void update(MemberPoint memberPoint);
 }

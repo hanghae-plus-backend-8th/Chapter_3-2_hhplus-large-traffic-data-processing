@@ -63,7 +63,7 @@ class CouponServiceTest {
         inOrder.verify(memberRepository, times(1)).getById(member.getMemberId());
         inOrder.verify(couponRepository, times(1)).getByIdLocking(coupon.getId());
         inOrder.verify(memberCouponRepository, times(1)).save(any());
-        inOrder.verify(couponRepository, times(1)).updateQuantity(coupon.getId(), coupon.getRemainingQuantity() - 1);
+        inOrder.verify(couponRepository, times(1)).update(any());
     }
 
     @Transactional

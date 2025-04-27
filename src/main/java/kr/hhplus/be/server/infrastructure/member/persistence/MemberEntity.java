@@ -68,7 +68,7 @@ public class MemberEntity extends BaseTimeEntity {
         return MemberPoint.of(memberId, point);
     }
 
-    public void updatePoint(Long point) {
-        this.point = point;
+    public void update(MemberPoint memberPoint) {
+        this.point = memberPoint.getPoint();
     }
 }
