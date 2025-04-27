@@ -1,24 +1,25 @@
 package kr.hhplus.be.server.domain.point;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberPoint {
 
     private long memberId;
     private long point;
 
-    public static MemberPoint of(long memberId, long point) {
+    private MemberPoint(long memberId, long point) {
         if (memberId <= 0) {
             throw new IllegalArgumentException("사용자 식별자가 유효하지 않습니다.");
         }
         if (point < 0) {
             throw new IllegalArgumentException("사용자 포인트가 유효하지 않습니다.");
         }
+        this.memberId = memberId;
+        this.point = point;
+    }
+
+    public static MemberPoint of(long memberId, long point) {
         return new MemberPoint(memberId, point);
     }
 

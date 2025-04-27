@@ -1,12 +1,10 @@
 package kr.hhplus.be.server.domain.product;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Product {
 
     private Long id;
@@ -14,26 +12,30 @@ public class Product {
     private long price;
     private int quantity;
 
-    public static Product create(@NonNull String name, long price, int quantity) {
-        if (price <= 0) {
-            throw new IllegalArgumentException("유효하지 않은 상품 금액입니다. 최소 금액을 확인해주세요.");
-        }
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("유효하지 않은 상품 수량입니다. 최소 수량을 확인해주세요.");
-        }
-        return new Product(null, name, price, quantity);
-    }
-
-    public static Product of(long id, @NonNull String name, long price, int quantity) {
-        if (id <= 0) {
+    private Product(@Nullable Long id, @NonNull String name, long price, int quantity) {
+        if (id != null && id <= 0) {
             throw new IllegalArgumentException("상품 식별자가 유효하지 않습니다.");
         }
         if (price <= 0) {
             throw new IllegalArgumentException("유효하지 않은 상품 금액입니다. 최소 금액을 확인해주세요.");
         }
-        if (quantity < 0) {
+        if (id == null && quantity <= 0) {
+            throw new IllegalArgumentException("유효하지 않은 상품 수량입니다. 최소 수량을 확인해주세요.");
+        }
+        if (id != null && quantity < 0) {
             throw new IllegalArgumentException("유효하지 않은 상품 수량입니다. 상품 수량은 음수일 수 없습니다.");
         }
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public static Product create(@NonNull String name, long price, int quantity) {
+        return new Product(null, name, price, quantity);
+    }
+
+    public static Product of(long id, @NonNull String name, long price, int quantity) {
         return new Product(id, name, price, quantity);
     }
 

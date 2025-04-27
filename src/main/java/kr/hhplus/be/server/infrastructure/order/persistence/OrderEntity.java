@@ -56,7 +56,7 @@ public class OrderEntity extends BaseTimeEntity {
 
     public Order toDomain() {
         List<OrderProduct> orderProductList = orderProducts.stream()
-                .map(orderProduct -> OrderProduct.of(orderProduct.getProductId(), orderProduct.getPrice(), orderProduct.getQuantity()))
+                .map(orderProduct -> OrderProduct.of(orderProduct.getOrderProductId(), orderProduct.getProductId(), orderProduct.getPrice(), orderProduct.getQuantity()))
                 .toList();
 
         return Order.of(orderId, member.getMemberId(), orderProductList, status);

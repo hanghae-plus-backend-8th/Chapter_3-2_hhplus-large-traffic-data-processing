@@ -4,8 +4,6 @@ import jakarta.annotation.Nullable;
 import kr.hhplus.be.server.domain.coupon.MemberCoupon;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.point.MemberPoint;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -14,7 +12,6 @@ import java.time.LocalDateTime;
 import static kr.hhplus.be.server.domain.payment.PaymentStatus.COMPLETED;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Payment {
 
     private Long id;
@@ -24,6 +21,27 @@ public class Payment {
     private long discountPrice;
     private long payPrice;
     private PaymentStatus status;
+
+    private Payment(
+            @Nullable Long id,
+            @NonNull Order order,
+            @Nullable MemberCoupon memberCoupon,
+            long totalPrice,
+            long discountPrice,
+            long payPrice,
+            @NonNull PaymentStatus status
+    ) {
+        if (id != null && id <= 0) {
+            throw new IllegalArgumentException("결제 식별자가 유효하지 않습니다.");
+        }
+        this.id = id;
+        this.order = order;
+        this.memberCoupon = memberCoupon;
+        this.totalPrice = totalPrice;
+        this.discountPrice = discountPrice;
+        this.payPrice = payPrice;
+        this.status = status;
+    }
 
     public static Payment processPayment(
             @NonNull Order order,
@@ -56,9 +74,6 @@ public class Payment {
             long payPrice,
             @NonNull PaymentStatus status
     ) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("결제 식별자가 유효하지 않습니다.");
-        }
         return new Payment(id, order, memberCoupon, totalPrice, discountPrice, payPrice, status);
     }
 }

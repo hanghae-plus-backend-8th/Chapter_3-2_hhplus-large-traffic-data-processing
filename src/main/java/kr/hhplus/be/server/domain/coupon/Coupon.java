@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import lombok.*;
+import jakarta.annotation.Nullable;
+import lombok.Getter;
+import lombok.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -8,7 +10,6 @@ import java.util.UUID;
 import static kr.hhplus.be.server.domain.coupon.CouponType.PERCENT;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Coupon {
 
     private Long id;
@@ -21,6 +22,47 @@ public class Coupon {
     private LocalDateTime endDateTime;
     public static final int MAX_PERCENT_DISCOUNT = 80;
 
+    private Coupon(
+            @Nullable Long id,
+            @NonNull String name,
+            @NonNull CouponType type,
+            int discountValue,
+            int initialQuantity,
+            int remainingQuantity,
+            @NonNull LocalDateTime startDateTime,
+            @NonNull LocalDateTime endDateTime
+    ) {
+        if (id != null && id <= 0) {
+            throw new IllegalArgumentException("쿠폰 식별자가 유효하지 않습니다.");
+        }
+        if (type == PERCENT && discountValue > MAX_PERCENT_DISCOUNT) {
+            throw new IllegalArgumentException("퍼센트 할인은 최대 80%까지 가능합니다.");
+        }
+        if (discountValue <= 0) {
+            throw new IllegalArgumentException("할인율이 유효하지 않습니다.");
+        }
+        if (initialQuantity <= 0) {
+            throw new IllegalArgumentException("초기 수량이 유효하지 않습니다.");
+        }
+        if (id == null && (remainingQuantity < 0 || remainingQuantity != initialQuantity)) {
+            throw new IllegalArgumentException("쿠폰 생성 시, 초기 수량과 잔여 수량은 일치해야 합니다.");
+        }
+        if (id != null && remainingQuantity <= 0) {
+            throw new IllegalArgumentException("잔여 수량이 유효하지 않습니다.");
+        }
+        if (startDateTime.isEqual(endDateTime) || startDateTime.isAfter(endDateTime)) {
+            throw new IllegalArgumentException("유효기간 종료일이 시작일보다 빠를 수 없습니다.");
+        }
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.discountValue = discountValue;
+        this.initialQuantity = initialQuantity;
+        this.remainingQuantity = remainingQuantity;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+    }
+
     public static Coupon create(
             @NonNull String name,
             @NonNull CouponType type,
@@ -29,10 +71,7 @@ public class Coupon {
             @NonNull LocalDateTime startDateTime,
             @NonNull LocalDateTime endDateTime
     ) {
-        int remainingQuantity = initialQuantity;
-        validate(discountValue, type, initialQuantity, remainingQuantity, startDateTime, endDateTime);
-
-        return new Coupon(null, name, type, discountValue, initialQuantity, remainingQuantity, startDateTime, endDateTime);
+        return new Coupon(null, name, type, discountValue, initialQuantity, initialQuantity, startDateTime, endDateTime);
     }
 
     public static Coupon of(
@@ -45,37 +84,7 @@ public class Coupon {
             @NonNull LocalDateTime startDateTime,
             @NonNull LocalDateTime endDateTime
     ) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("쿠폰 식별자가 유효하지 않습니다.");
-        }
-        validate(discountValue, type, initialQuantity, remainingQuantity, startDateTime, endDateTime);
-
         return new Coupon(id, name, type, discountValue, initialQuantity, remainingQuantity, startDateTime, endDateTime);
-    }
-
-    private static void validate(
-            int discountValue,
-            CouponType type,
-            int initialQuantity,
-            int remainingQuantity,
-            LocalDateTime startDateTime,
-            LocalDateTime endDateTime
-    ) {
-        if (discountValue <= 0) {
-            throw new IllegalArgumentException("할인율이 유효하지 않습니다.");
-        }
-        if (type == PERCENT && discountValue > MAX_PERCENT_DISCOUNT) {
-            throw new IllegalArgumentException("퍼센트 할인은 최대 80%까지 가능합니다.");
-        }
-        if (initialQuantity <= 0) {
-            throw new IllegalArgumentException("초기 수량이 유효하지 않습니다.");
-        }
-        if (remainingQuantity < 0) {
-            throw new IllegalArgumentException("잔여 수량이 유효하지 않습니다.");
-        }
-        if (startDateTime.isEqual(endDateTime) || startDateTime.isAfter(endDateTime)) {
-            throw new IllegalArgumentException("유효기간 종료일이 시작일보다 빠를 수 없습니다.");
-        }
     }
 
     public long calculateDiscount(long price) {

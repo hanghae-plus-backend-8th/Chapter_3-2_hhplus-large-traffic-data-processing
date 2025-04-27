@@ -1,18 +1,20 @@
 package kr.hhplus.be.server.domain.order;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderProduct {
 
+    private Long id;
     private long productId;
     private long price;
     private int quantity;
 
-    public static OrderProduct of(long productId, long price, int quantity) {
+    private OrderProduct(@Nullable Long id, long productId, long price, int quantity) {
+        if (id != null && id <= 0) {
+            throw new IllegalArgumentException("주문상품 식별자가 유효하지 않습니다.");
+        }
         if (productId <= 0) {
             throw new IllegalArgumentException("상품 식별자가 유효하지 않습니다.");
         }
@@ -22,6 +24,17 @@ public class OrderProduct {
         if (quantity <= 0) {
             throw new IllegalArgumentException("구매 수량이 유효하지 않습니다.");
         }
-        return new OrderProduct(productId, price, quantity);
+        this.id = id;
+        this.productId = productId;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public static OrderProduct create(long productId, long price, int quantity) {
+        return new OrderProduct(null, productId, price, quantity);
+    }
+
+    public static OrderProduct of(long id, long productId, long price, int quantity) {
+        return new OrderProduct(id, productId, price, quantity);
     }
 }
