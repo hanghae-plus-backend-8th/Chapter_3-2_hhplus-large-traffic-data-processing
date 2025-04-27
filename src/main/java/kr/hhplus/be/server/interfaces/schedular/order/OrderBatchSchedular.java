@@ -1,10 +1,9 @@
-package kr.hhplus.be.server.application.order;
+package kr.hhplus.be.server.interfaces.schedular.order;
 
 import jakarta.persistence.EntityManagerFactory;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderRepository;
 import kr.hhplus.be.server.domain.order.OrderStatistics;
-import kr.hhplus.be.server.domain.order.OrderStatisticsRepository;
 import kr.hhplus.be.server.infrastructure.order.persistence.OrderStatisticsEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
