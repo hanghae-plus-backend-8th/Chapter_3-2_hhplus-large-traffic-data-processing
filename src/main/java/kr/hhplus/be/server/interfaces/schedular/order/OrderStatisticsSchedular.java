@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OrderBatchSchedular {
+public class OrderStatisticsSchedular {
 
     private final OrderRepository orderRepository;
     private final EntityManagerFactory entityManagerFactory;
