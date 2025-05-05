@@ -49,6 +49,11 @@ public class Payment {
             @NonNull MemberPoint memberPoint,
             @NonNull LocalDateTime now
     ) {
+        // 쿠폰 검증
+        if (memberCoupon != null && memberCoupon.isNotMine(memberPoint.getMemberId())) {
+            throw new IllegalArgumentException("해당 쿠폰에 대한 접근 권한이 없습니다.");
+        }
+
         // 금액 계산
         long totalPrice = order.getTotalPrice();
         long discountPrice = memberCoupon != null
@@ -60,6 +65,8 @@ public class Payment {
         if (payPrice > 0L) {
             memberPoint.use(payPrice);
         }
+
+        // 주문 완료
         order.complete();
 
         return new Payment(null, order, memberCoupon, totalPrice, discountPrice, payPrice, COMPLETED);

@@ -17,7 +17,8 @@ import kr.hhplus.be.server.domain.point.PointHistoryRepository;
 import kr.hhplus.be.server.domain.point.PointRepository;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,6 @@ import java.util.concurrent.CountDownLatch;
 import static kr.hhplus.be.server.domain.coupon.CouponType.FIXED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 
 @SpringBootTest
@@ -99,16 +99,15 @@ class OrderServiceTest {
         // then
         InOrder inOrder = BDDMockito.inOrder(
                 memberCouponRepository, productRepository, pointRepository,
-                couponRepository, orderRepository, paymentRepository,
-                pointHistoryRepository
+                orderRepository, paymentRepository
         );
 
         assertThat(orderCaptureResult).extracting("totalPrice", "discountPrice", "payPrice")
                 .containsExactlyInAnyOrder(3000L, 3000L, 0L);
-        inOrder.verify(memberCouponRepository, times(1)).getByCouponNumberLocking(couponNumber);
-        inOrder.verify(pointRepository, times(1)).getByIdLocking(member.getMemberId());
         inOrder.verify(productRepository, times(1)).findAllByIdsLocking(List.of(product.getId()));
         inOrder.verify(orderRepository, times(1)).save(any());
+        inOrder.verify(pointRepository, times(1)).getByIdLocking(member.getMemberId());
+        inOrder.verify(memberCouponRepository, times(1)).getByCouponNumberLocking(couponNumber);
         inOrder.verify(paymentRepository, times(1)).save(any());
         inOrder.verify(memberCouponRepository, times(1)).update(any());
     }
