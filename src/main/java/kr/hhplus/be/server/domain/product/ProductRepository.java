@@ -10,4 +10,5 @@ public interface ProductRepository {
     List<Product> findAllByIds(List<Long> productIds);
     List<Product> findAllByIdsLocking(List<Long> productIds);
     List<Product> findTopProducts(int limit);
+    List<Product> findTopProductsCaching(int limit);
 }

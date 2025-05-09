@@ -1,12 +1,16 @@
 package kr.hhplus.be.server.infrastructure.product.persistence;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductRepository;
 import kr.hhplus.be.server.shared.exception.NotFoundResourceException;
+import kr.hhplus.be.server.shared.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -15,6 +19,7 @@ import java.util.List;
 public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductJpaRepository productJpaRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public Product save(Product product) {
@@ -65,5 +70,16 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .stream()
                 .map(ProductEntity::toDomain)
                 .toList();
+    }
+
+    @Override
+    public List<Product> findTopProductsCaching(int limit) {
+        String jsonData = redisTemplate.opsForValue()
+                .get("topProducts");
+
+        if (jsonData == null) {
+            return new ArrayList<>();
+        }
+        return JsonUtil.fromJson(jsonData, new TypeReference<List<Product>>() {});
     }
 }

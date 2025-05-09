@@ -26,7 +26,7 @@ public class ProductService {
     }
 
     public List<ProductPopularResult> popular(int limit) {
-        return productRepository.findTopProducts(limit)
+        return productRepository.findTopProductsCaching(limit)
                 .stream()
                 .map(ProductPopularResult::new)
                 .toList();
