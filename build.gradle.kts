@@ -37,12 +37,16 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.retry:spring-retry")
 
-    // DB
+    // DB (RDB)
 	runtimeOnly("com.mysql:mysql-connector-j")
 	implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
 	annotationProcessor("com.querydsl:querydsl-apt:5.1.0:jakarta")
 	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+
+	// NoSQL
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation("org.apache.commons:commons-pool2:2.11.1")
 
 	// Batch
 	implementation("org.springframework.boot:spring-boot-starter-batch")

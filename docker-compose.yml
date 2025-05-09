@@ -11,6 +11,11 @@ services:
       - MYSQL_DATABASE=hhplus
     volumes:
       - ./data/mysql/:/var/lib/mysql
+  redis:
+    image: redis:alpine3.21
+    container_name: redis-node
+    ports:
+      - "6379:6379"
 
 networks:
   default:

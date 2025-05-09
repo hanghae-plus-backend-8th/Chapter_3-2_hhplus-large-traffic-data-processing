@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.shared.aop;
+package kr.hhplus.be.server.shared.aop.log;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
