@@ -46,6 +46,7 @@ dependencies {
 
 	// NoSQL
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation("org.redisson:redisson-spring-boot-starter:3.41.0")
 	implementation("org.apache.commons:commons-pool2:2.11.1")
 
 	// Batch

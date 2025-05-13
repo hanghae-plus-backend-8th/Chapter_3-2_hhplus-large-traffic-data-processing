@@ -10,6 +10,7 @@ import kr.hhplus.be.server.domain.coupon.MemberCouponRepository;
 import kr.hhplus.be.server.domain.member.Member;
 import kr.hhplus.be.server.domain.member.MemberRepository;
 import kr.hhplus.be.server.shared.aop.lock.DistributedLock;
+import kr.hhplus.be.server.shared.aop.lock.LockType;
 import kr.hhplus.be.server.shared.dto.ListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+
+import static kr.hhplus.be.server.shared.aop.lock.LockKeyValueGenerator.LockKeyType.COUPON;
 
 @Slf4j
 @Service
@@ -28,11 +31,11 @@ public class CouponService {
     private final MemberCouponRepository memberCouponRepository;
     private final CouponRepository couponRepository;
 
-    @DistributedLock(key = "'coupon:' + #couponId")
+    @DistributedLock(keyType = COUPON, key = "#couponId")
     @Transactional
     public CouponDownloadResult download(long couponId, long memberId) {
         Member member = memberRepository.getById(memberId);
-        Coupon coupon = couponRepository.getByIdLocking(couponId);
+        Coupon coupon = couponRepository.getById(couponId);
 
         MemberCoupon memberCoupon = coupon.giveCoupon(member.getMemberId(), LocalDateTime.now());
         memberCouponRepository.save(memberCoupon);
