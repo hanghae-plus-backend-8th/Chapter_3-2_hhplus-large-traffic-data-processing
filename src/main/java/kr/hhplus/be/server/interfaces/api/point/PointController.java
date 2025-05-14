@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.interfaces.api.point;
 
-import kr.hhplus.be.server.application.point.PointResult;
 import kr.hhplus.be.server.application.point.PointResult.PointChargeResult;
 import kr.hhplus.be.server.application.point.PointResult.PointInfoResult;
 import kr.hhplus.be.server.application.point.PointService;

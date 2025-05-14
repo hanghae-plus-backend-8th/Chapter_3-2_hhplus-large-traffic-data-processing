@@ -10,7 +10,6 @@ import kr.hhplus.be.server.domain.coupon.MemberCouponRepository;
 import kr.hhplus.be.server.domain.member.Member;
 import kr.hhplus.be.server.domain.member.MemberRepository;
 import kr.hhplus.be.server.shared.aop.lock.DistributedLock;
-import kr.hhplus.be.server.shared.aop.lock.LockType;
 import kr.hhplus.be.server.shared.dto.ListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
